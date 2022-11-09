@@ -14,41 +14,29 @@ namespace PruebaApiREST.Controllers
     public class SolicitudesController : ControllerBase
     {
         private readonly TodoContext _context;
-
         public SolicitudesController(TodoContext context)
         {
             _context = context;
         }
-
         // GET: api/Solicitudes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Solicitud>>> GetSolicitudes()
+        public async Task<ActionResult<IEnumerable<SolicitudDTO>>> GetSolicitudes()
         {
-          if (_context.Solicitudes == null)
-          {
-              return NotFound();
-          }
-            return await _context.Solicitudes.ToListAsync();
+            return await _context.Solicitudes
+                .Select(x => SolicitudToDTO(x))
+                .ToListAsync();
         }
-
         // GET: api/Solicitudes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Solicitud>> GetSolicitud(int? id)
+        public async Task<ActionResult<SolicitudDTO>> GetSolicitud(int? id)
         {
-          if (_context.Solicitudes == null)
-          {
-              return NotFound();
-          }
             var solicitud = await _context.Solicitudes.FindAsync(id);
-
             if (solicitud == null)
             {
                 return NotFound();
             }
-
-            return solicitud;
+            return SolicitudToDTO(solicitud);
         }
-
         // PUT: api/Solicitudes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -58,9 +46,7 @@ namespace PruebaApiREST.Controllers
             {
                 return BadRequest();
             }
-
             _context.Entry(solicitud).State = EntityState.Modified;
-
             try
             {
                 await _context.SaveChangesAsync();
@@ -76,19 +62,17 @@ namespace PruebaApiREST.Controllers
                     throw;
                 }
             }
-
             return NoContent();
         }
-
         // POST: api/Solicitudes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Solicitud>> PostSolicitud(Solicitud solicitud)
         {
-          if (_context.Solicitudes == null)
-          {
-              return Problem("Entity set 'TodoContext.Solicitudes'  is null.");
-          }
+            if (_context.Solicitudes == null)
+            {
+                return Problem("Entity set 'TodoContext.Solicitudes'  is null.");
+            }
             _context.Solicitudes.Add(solicitud);
             try
             {
@@ -105,7 +89,6 @@ namespace PruebaApiREST.Controllers
                     throw;
                 }
             }
-
             return CreatedAtAction("GetSolicitud", new { id = solicitud.idSolicitud }, solicitud);
         }
 
@@ -122,16 +105,21 @@ namespace PruebaApiREST.Controllers
             {
                 return NotFound();
             }
-
             _context.Solicitudes.Remove(solicitud);
             await _context.SaveChangesAsync();
-
             return NoContent();
         }
-
         private bool SolicitudExists(int? id)
         {
             return (_context.Solicitudes?.Any(e => e.idSolicitud == id)).GetValueOrDefault();
         }
+        private static SolicitudDTO SolicitudToDTO(Solicitud _solicitud) =>
+            new SolicitudDTO
+            {
+                idSolicitud = _solicitud.idSolicitud,
+                Descripcion = _solicitud.Descripcion,
+                Importancia = _solicitud.Importancia,
+                Fecha = _solicitud.Fecha
+            };
     }
 }
