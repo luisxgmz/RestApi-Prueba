@@ -64,6 +64,7 @@ namespace PruebaApiREST.Controllers
             }
             return NoContent();
         }
+
         // POST: api/Usuarios
         [HttpPost]
         public async Task<ActionResult<Usuario>> PostUsuario(Usuario usuario)
@@ -89,8 +90,10 @@ namespace PruebaApiREST.Controllers
             {
                 return NotFound();
             }
+
             _context.Usuarios.Remove(usuario);
             await _context.SaveChangesAsync();
+
             return NoContent();
         }
 
@@ -104,7 +107,6 @@ namespace PruebaApiREST.Controllers
             {
                 idUsuario = usuario.idUsuario,
                 Nombre = usuario.Nombre,
-                FNac = usuario.FNac,
                 Email = usuario.Email
             };
     }
