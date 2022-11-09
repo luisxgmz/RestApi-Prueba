@@ -14,6 +14,5 @@ namespace PruebaApiREST.Models
         public DateTime FNac { get; set; }
         public string? Email { get; set; }
         public string? Ubicacion { get; set; }
-
     }
 }
