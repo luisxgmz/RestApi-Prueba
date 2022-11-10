@@ -11,5 +11,6 @@ namespace PruebaApiREST.Models
         public string? Descripcion { get; set; }
         public string? Importancia { get; set; }
         public DateTime? Fecha { get; set; }
+        public string? Status { get; set; }
     }
 }

@@ -12,8 +12,8 @@ using PruebaApiREST.Models;
 namespace PruebaApiREST.Migrations
 {
     [DbContext(typeof(TodoContext))]
-    [Migration("20221108231530_Usuario_FNac_Email")]
-    partial class Usuario_FNac_Email
+    [Migration("20221110160236_Actualizacion")]
+    partial class Actualizacion
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,21 +24,49 @@ namespace PruebaApiREST.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-  
+            modelBuilder.Entity("PruebaApiREST.Models.Solicitud", b =>
+                {
+                    b.Property<int?>("idSolicitud")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Importancia")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UsuarioAsignado")
+                        .HasColumnType("int");
+
+                    b.HasKey("idSolicitud");
+
+                    b.ToTable("Solicitudes");
+                });
 
             modelBuilder.Entity("PruebaApiREST.Models.Usuario", b =>
                 {
                     b.Property<int?>("idUsuario")
                         .HasColumnType("int");
 
+                    b.Property<string>("Area")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("FNac")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Oficina")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")

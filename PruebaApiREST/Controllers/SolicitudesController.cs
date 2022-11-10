@@ -119,7 +119,8 @@ namespace PruebaApiREST.Controllers
                 idSolicitud = _solicitud.idSolicitud,
                 Descripcion = _solicitud.Descripcion,
                 Importancia = _solicitud.Importancia,
-                Fecha = _solicitud.Fecha
+                Fecha = _solicitud.Fecha,
+                Status = _solicitud.Status
             };
     }
 }
