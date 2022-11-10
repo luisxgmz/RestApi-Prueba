@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PruebaApiREST.Models
 {
-    public class SolicitudDTO
+    public class SolicitudDTO 
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

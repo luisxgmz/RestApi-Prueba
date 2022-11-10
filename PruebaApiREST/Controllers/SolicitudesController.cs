@@ -18,16 +18,15 @@ namespace PruebaApiREST.Controllers
         {
             _context = context;
         }
-        // GET: api/Solicitudes
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<SolicitudDTO>>> GetSolicitudes()
+        [HttpGet] // Obtener listado de solicitudes
+        public async Task<ActionResult<List<SolicitudDTO>>> GetSolicitudes()
         {
             return await _context.Solicitudes
                 .Select(x => SolicitudToDTO(x))
                 .ToListAsync();
         }
-        // GET: api/Solicitudes/5
-        [HttpGet("{id}")]
+
+        [HttpGet("{id}")] // Obtener solicitud mediante Id
         public async Task<ActionResult<SolicitudDTO>> GetSolicitud(int? id)
         {
             var solicitud = await _context.Solicitudes.FindAsync(id);
@@ -37,8 +36,7 @@ namespace PruebaApiREST.Controllers
             }
             return SolicitudToDTO(solicitud);
         }
-        // PUT: api/Solicitudes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSolicitud(int? id, Solicitud solicitud)
         {
@@ -64,8 +62,7 @@ namespace PruebaApiREST.Controllers
             }
             return NoContent();
         }
-        // POST: api/Solicitudes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPost]
         public async Task<ActionResult<Solicitud>> PostSolicitud(Solicitud solicitud)
         {
@@ -92,7 +89,6 @@ namespace PruebaApiREST.Controllers
             return CreatedAtAction("GetSolicitud", new { id = solicitud.idSolicitud }, solicitud);
         }
 
-        // DELETE: api/Solicitudes/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSolicitud(int? id)
         {
@@ -109,6 +105,7 @@ namespace PruebaApiREST.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
+
         private bool SolicitudExists(int? id)
         {
             return (_context.Solicitudes?.Any(e => e.idSolicitud == id)).GetValueOrDefault();

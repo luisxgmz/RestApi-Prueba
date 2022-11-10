@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using PruebaApiREST.Models;
 
 namespace PruebaApiREST.Controllers
-{
-    [Route("api/[controller]")]
+{ 
     [ApiController]
+    [Route("api/[controller]")]   
     public class UsuariosController : ControllerBase
     {
         private readonly TodoContext _context;

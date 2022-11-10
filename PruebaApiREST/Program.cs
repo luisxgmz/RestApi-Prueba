@@ -15,6 +15,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IRepository, Repository<TodoContext>>();
 
+//builder.Services.AddTransient(typeof(IRepository<>),typeof(Repository<>));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

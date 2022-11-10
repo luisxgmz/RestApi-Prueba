@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 
 namespace PruebaApiREST.Models
@@ -11,5 +12,11 @@ namespace PruebaApiREST.Models
         { _options = options; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Solicitud> Solicitudes { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        }
+
     }
 }
