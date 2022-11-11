@@ -10,6 +10,7 @@ namespace PruebaApiREST.Models
         public TodoContext(DbContextOptions<TodoContext> options)
         : base(options)
         { _options = options; }
+
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Solicitud> Solicitudes { get; set; }
 

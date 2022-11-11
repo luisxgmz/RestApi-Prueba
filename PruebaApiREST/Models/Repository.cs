@@ -24,7 +24,6 @@ namespace PruebaApiREST.Models
         public async Task DeleteAsync<T>(T entity) where T : class
         {
             this.dbContext.Set<T>().Remove(entity);
-
             _ = await this.dbContext.SaveChangesAsync();
         }
 
@@ -42,7 +41,6 @@ namespace PruebaApiREST.Models
         public async Task UpdateAsync<T>(T entity) where T : class
         {
             this.dbContext.Set<T>().Update(entity);
-
             _ = await this.dbContext.SaveChangesAsync();
         }
     }

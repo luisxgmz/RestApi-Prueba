@@ -1,0 +1,12 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP .NET Core service.
+
+version: '3.4'
+
+services:
+  pruebaapirest:
+    image: pruebaapirest
+    build:
+      context: .
+      dockerfile: PruebaApiREST/Dockerfile
+    ports:
+      - 5000:5000
