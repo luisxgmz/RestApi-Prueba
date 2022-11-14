@@ -8,24 +8,28 @@ using Microsoft.EntityFrameworkCore;
 using PruebaApiREST.Models;
 
 namespace PruebaApiREST.Controllers
-{ 
+{
     [ApiController]
-    [Route("api/[controller]")]   
+    [Route("api/[controller]")]
     public class UsuariosController : ControllerBase
     {
+        private readonly string cadenaSQL;
         private readonly TodoContext _context;
-        public UsuariosController(TodoContext context)
+        public UsuariosController(TodoContext context, IConfiguration config)
         {
             _context = context;
+            cadenaSQL = config.GetConnectionString("Conexion");
         }
         // GET: api/Usuarios
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UsuarioDTO>>> GetUsuarios()
         {
+            // var usuarios = _repository.GetUsuarios();
             return await _context.Usuarios
                 .Select(x => UsuarioToDTO(x))
                 .ToListAsync();
         }
+        
         // GET: api/Usuarios/5
         [HttpGet("{id}")]
         public async Task<ActionResult<UsuarioDTO>> GetUsuario(int id)
@@ -38,62 +42,70 @@ namespace PruebaApiREST.Controllers
             }
             return UsuarioToDTO(usuario);
         }
+
         // PUT: api/Usuarios/5     
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUsuario(int id, Usuario usuario)
+        public async Task<IActionResult> PutUsuario(int id, UsuarioDTO usuarioDTO)
         {
-            if (id != usuario.idUsuario)
+            if (id != usuarioDTO.idUsuario)
             {
                 return BadRequest();
             }
-            _context.Entry(usuario).State = EntityState.Modified;
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UsuarioExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return NoContent();
-        }
 
-        // POST: api/Usuarios
-        [HttpPost]
-        public async Task<ActionResult<Usuario>> PostUsuario(Usuario usuario)
-        {
-            if (_context.Usuarios == null)
-            {
-                return Problem("Entity set 'TodoContext.Usuarios'  is null.");
-            }
-            _context.Usuarios.Add(usuario);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction("GetUsuario", new { id = usuario.idUsuario }, usuario);
-        }
-        // DELETE: api/Usuarios/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUsuario(int id)
-        {
-            if (_context.Usuarios == null)
-            {
-                return NotFound();
-            }
             var usuario = await _context.Usuarios.FindAsync(id);
             if (usuario == null)
             {
                 return NotFound();
             }
 
-            _context.Usuarios.Remove(usuario);
+            usuario.Nombre = usuarioDTO.Nombre;
+            usuario.Email = usuarioDTO.Email;
+            usuario.FNac = usuarioDTO.FNac;
+            usuario.Area = usuarioDTO.Area;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException) when (!UsuarioExists(id))
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
+
+        // POST: api/Usuarios
+        [HttpPost]
+        public async Task<ActionResult<UsuarioDTO>> PostUsuario(UsuarioDTO usuarioDTO)
+        {
+            var usuario = new Usuario
+            {
+                idUsuario=usuarioDTO.idUsuario,
+                Nombre = usuarioDTO.Nombre,
+                Email = usuarioDTO.Email,
+                Area = usuarioDTO.Area
+            };
+
+            _context.Usuarios.Add(usuario);
             await _context.SaveChangesAsync();
 
+            return CreatedAtAction(
+                nameof(GetUsuario),
+                new { id = usuario.idUsuario },
+                UsuarioToDTO(usuario));
+        }
+
+        // DELETE: api/Usuarios/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUsuario(int id)
+        {
+            var usuario = await _context.Usuarios.FindAsync(id);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+            _context.Usuarios.Remove(usuario);
+            await _context.SaveChangesAsync();
             return NoContent();
         }
 
@@ -107,7 +119,9 @@ namespace PruebaApiREST.Controllers
             {
                 idUsuario = usuario.idUsuario,
                 Nombre = usuario.Nombre,
-                Email = usuario.Email
+                Email = usuario.Email,
+                FNac = usuario.FNac,
+                Area = usuario.Area
             };
     }
 }
